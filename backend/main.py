@@ -1,24 +1,10 @@
 from fastapi import FastAPI, File, UploadFile
-
-app = FastAPI()
-
-@app.get("/")
-def home():
-    return {"message": "Backend is running"}
-
-@app.post("/upload")
-async def upload_image(file: UploadFile = File(...)):
-    return {
-        "filename": file.filename,
-        "message": "File received successfully"
-    }
-
-from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+import os
+import shutil
 
 app = FastAPI()
 
-# ✅ Add CORS here (after app creation)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -33,7 +19,15 @@ def home():
 
 @app.post("/upload")
 async def upload_image(file: UploadFile = File(...)):
+    upload_dir = "uploads"
+    os.makedirs(upload_dir, exist_ok=True)
+
+    file_path = os.path.join(upload_dir, file.filename)
+
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
     return {
         "filename": file.filename,
-        "message": "File received successfully"
+        "message": "File uploaded successfully"
     }
