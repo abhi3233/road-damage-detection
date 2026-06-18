@@ -5,6 +5,7 @@ function App() {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [location, setLocation] = useState(null);
+  const [result, setResult] = useState([]);
 
   // 📸 Handle file selection
   const handleFileChange = (e) => {
@@ -15,18 +16,32 @@ function App() {
 
   // 📍 Get GPS location
   const getLocation = () => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      setLocation({
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      });
-    });
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      },
+      (error) => {
+        console.log(error);
+        alert("Location access denied");
+      }
+    );
   };
 
   // 🚀 Upload to backend
   const uploadImage = async () => {
+    if (!file) return alert("Please select a file");
+
     const formData = new FormData();
     formData.append("file", file);
+
+    // ✅ Send GPS if available
+    if (location) {
+      formData.append("latitude", location.lat);
+      formData.append("longitude", location.lng);
+    }
 
     try {
       const res = await axios.post(
@@ -35,7 +50,11 @@ function App() {
       );
 
       console.log(res.data);
-      alert("Upload successful!");
+
+      // ✅ Store detection results
+      setResult(res.data.detections);
+
+      alert("Upload + Detection successful!");
     } catch (err) {
       console.log(err);
       alert("Upload failed");
@@ -53,7 +72,7 @@ function App() {
       {preview && (
         <div>
           <h4>Preview:</h4>
-          <img src={preview} width="300" />
+          <img src={preview} width="300" alt="preview" />
         </div>
       )}
 
@@ -68,6 +87,19 @@ function App() {
 
       {/* Upload button */}
       <button onClick={uploadImage}>Upload</button>
+
+      {/* 🔥 Detection Results */}
+      {result.length > 0 && (
+        <div>
+          <h3>Detection Results:</h3>
+          {result.map((item, index) => (
+            <div key={index}>
+              <p>Damage: {item.damage_type}</p>
+              <p>Confidence: {item.confidence}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
