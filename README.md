@@ -131,16 +131,16 @@ npm start
 
 ## 👨‍💻 Team
 
-* **Chunduri Abhiram** (Team Lead) — MC240041011
-* **Enakollu Mahidhar Reddy** — CSE240001030
-* **Chunchu Santhosh Rushendra** — CE240004013
-* **Katammagari Manas Joel** — CE240004025
+* **Chunduri Abhiram** (Team Lead) — mc240041011@iiti.ac.in
+* **Enakollu Mahidhar Reddy** — cse240001030@iiti.ac.in
+* **Chunchu Santhosh Rushendra** — ce240004013@iiti.ac.in
+* **Katammagari Manas Joel** — ce240004025@iiti.ac.in
 
 ---
 
 ## 🙏 Acknowledgment
 
-Special thanks to our mentor for guidance on improving dataset quality and model performance.
+Special thanks to our mentor Sourav Rai for guidance on improving dataset quality and model performance.
 
 ---
 
