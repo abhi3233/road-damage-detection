@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import Dashboard from "./Dashboard";
 
 function App() {
   const [file, setFile] = useState(null);
@@ -7,14 +8,12 @@ function App() {
   const [location, setLocation] = useState(null);
   const [result, setResult] = useState([]);
 
-  // 📸 Handle file selection
   const handleFileChange = (e) => {
     const selected = e.target.files[0];
     setFile(selected);
     setPreview(URL.createObjectURL(selected));
   };
 
-  // 📍 Get GPS location
   const getLocation = () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -30,14 +29,15 @@ function App() {
     );
   };
 
-  // 🚀 Upload to backend
   const uploadImage = async () => {
-    if (!file) return alert("Please select a file");
+    if (!file) {
+      alert("Please select a file");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("file", file);
 
-    // ✅ Send GPS if available
     if (location) {
       formData.append("latitude", location.lat);
       formData.append("longitude", location.lng);
@@ -49,26 +49,22 @@ function App() {
         formData
       );
 
-      console.log(res.data);
-
-      // ✅ Store detection results
-      setResult(res.data.detections);
-
-      alert("Upload + Detection successful!");
+      setResult(res.data.detections || []);
+      alert("Upload successful!");
     } catch (err) {
-      console.log(err);
+      console.error(err);
       alert("Upload failed");
     }
   };
 
   return (
     <div style={{ padding: "20px" }}>
-      <h2>Road Damage Detection Upload</h2>
+      <h1>Road Damage Detection</h1>
 
-      {/* File input */}
+      <h2>Upload Image</h2>
+
       <input type="file" onChange={handleFileChange} />
 
-      {/* Preview */}
       {preview && (
         <div>
           <h4>Preview:</h4>
@@ -76,7 +72,6 @@ function App() {
         </div>
       )}
 
-      {/* Location */}
       <button onClick={getLocation}>Get GPS Location</button>
 
       {location && (
@@ -85,10 +80,8 @@ function App() {
         </p>
       )}
 
-      {/* Upload button */}
       <button onClick={uploadImage}>Upload</button>
 
-      {/* 🔥 Detection Results */}
       {result.length > 0 && (
         <div>
           <h3>Detection Results:</h3>
@@ -100,6 +93,10 @@ function App() {
           ))}
         </div>
       )}
+
+      <hr />
+
+      <Dashboard />
     </div>
   );
 }

@@ -1,0 +1,24 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": false,
+      "externalConsole": true,
+      "cwd": "c:/Users/HP/AppData/Local/Temp/0f3d6497-035e-4c65-9aea-4a1ddfd5e986_blender-blender-v4.5-release.zip.986/blender/source/blender/blenlib/intern",
+      "program": "c:/Users/HP/AppData/Local/Temp/0f3d6497-035e-4c65-9aea-4a1ddfd5e986_blender-blender-v4.5-release.zip.986/blender/source/blender/blenlib/intern/build/Debug/outDebug",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ]
+}
