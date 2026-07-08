@@ -2,108 +2,157 @@
 
 ## 📌 Project Overview
 
-The **Road Damage Detection and Monitoring System** is designed to detect road damages such as **potholes and cracks** using computer vision techniques. The system enables users to upload road images through a web interface, which are then processed by an AI model to identify and classify damages.
+The **Road Damage Detection and Monitoring System** is an AI-powered web application designed to automatically detect road damages such as **potholes and cracks** using computer vision.
+
+Users can upload road images through a simple web interface, and the system processes them using a trained deep learning model to identify and classify damages. The goal is to assist authorities and individuals in **efficient road monitoring and maintenance**.
 
 ---
 
 ## 🎯 Objectives
 
-* Detect road damages using AI (YOLOv8)
-* Provide an easy-to-use web interface
-* Enable image upload with optional GPS location
-* Build an end-to-end system (Frontend + Backend + AI Model)
+* Detect road damages using deep learning (**YOLOv8**)
+* Provide an intuitive and responsive web interface
+* Enable image upload with optional **GPS location tagging**
+* Build a complete **end-to-end pipeline (Frontend + Backend + AI Model)**
+* Store and display detection reports in a dashboard
 
 ---
 
 ## 🛠️ Tech Stack
 
-* **Frontend:** React.js
-* **Backend:** FastAPI
-* **Model:** YOLOv8 (Ultralytics)
-* **Language:** Python
-* **Tools:** VS Code, GitHub
+| Component | Technology Used      |
+| --------- | -------------------- |
+| Frontend  | React.js             |
+| Backend   | FastAPI              |
+| AI Model  | YOLOv8 (Ultralytics) |
+| Language  | Python, JavaScript   |
+| Tools     | VS Code, Git, GitHub |
 
 ---
 
-## 📅 Progress Overview
+## 📅 Development Progress
 
-### ✅ Week 1: Project Setup and Initialization
+### ✅ Week 1: Project Setup
 
-* Setup project structure
-* Initialized frontend (React) and backend (FastAPI)
-* Created basic UI with image upload option
+* Initialized project structure
+* Set up **React frontend** and **FastAPI backend**
+* Built basic UI for image upload
+
+**Outcome:**
+✔️ Working project skeleton with frontend-backend separation
 
 ---
 
 ### ✅ Week 2: Frontend–Backend Integration
 
-* Developed POST API (`/upload`) in FastAPI
-* Connected frontend to backend using Fetch/Axios
-* Implemented image preview before upload
-* Added GPS location capture using browser API
-* Stored uploaded images in backend
+* Developed API endpoint: `/upload`
+* Connected frontend using Fetch API
+* Implemented:
+
+  * Image preview before upload
+  * GPS location capture (Browser API)
+  * Backend image storage
 
 **Outcome:**
-✔️ Fully working image upload system with backend communication
+✔️ Fully functional image upload system with backend communication
 
 ---
 
 ### ✅ Week 3: AI Model Integration
 
-* Installed and configured YOLOv8
+* Installed and configured **YOLOv8**
 * Performed inference on uploaded images
-* Implemented detection of potholes and cracks
-* Extracted detection results (labels + confidence)
-* Integrated model with backend
-* Completed end-to-end testing
+* Detected:
+
+  * Potholes
+  * Cracks
+* Extracted:
+
+  * Labels
+  * Confidence scores
+* Integrated model with backend APIs
+
+**Outcome:**
+✔️ End-to-end AI pipeline completed
+
+---
+
+### ✅ Week 4: Dashboard & Reports (Latest)
+
+* Stored detection results in backend (database/files)
+* Created **dashboard in React**
+* Displayed:
+
+  * Uploaded images
+  * Detection results
+  * Reports list
+
+**Outcome:**
+✔️ Complete system with visualization of results
 
 ---
 
 ## 📊 Dataset and Training
 
-* Initially used **RDD2022 dataset (~25,000 images)** but faced long training times (~7 hours).
-* Switched to a smaller dataset (~400 images) for faster experimentation.
-* Successfully trained and integrated YOLOv8 model.
+* Initially used **RDD2022 dataset (~25,000 images)**
+
+  * Faced long training times (~7 hours)
+* Switched to a smaller dataset (~400 images) for faster iteration
+* Successfully trained and integrated YOLOv8 model
 
 ---
 
-## ⚠️ Challenges
+## ⚠️ Challenges Faced
 
-* Low accuracy due to small dataset
-* Difficulty distinguishing potholes vs cracks
-* Inconsistent predictions
+* Limited dataset size → reduced accuracy
+* Difficulty distinguishing **potholes vs cracks**
+* Inconsistent model predictions
+* Training time constraints
 
 ---
 
-## 💡 Improvements (Mentor Suggestions)
+## 💡 Improvements & Future Work
 
-* Focus on **dataset quality**
-* Apply **data augmentation** (flip, rotate, brightness, scaling)
-* Verify annotations manually (20–30 images)
-* Correct bounding boxes if needed
+* Increase dataset size and quality
+* Apply **data augmentation techniques**:
+
+  * Flipping
+  * Rotation
+  * Brightness adjustment
+  * Scaling
+* Manually verify annotations (20–30 samples)
+* Improve bounding box accuracy
+* Add:
+
+  * Filtering (damage type)
+  * Analytics dashboard (charts)
+  * Real-time detection
+  * Map-based visualization (using GPS)
 
 ---
 
 ## 🚀 Current Features
 
-* Image upload from frontend
-* Image preview
-* GPS location capture
-* Backend storage
-* AI-based detection
-* End-to-end pipeline
+* 📤 Image upload from frontend
+* 🖼️ Image preview before submission
+* 📍 Optional GPS location capture
+* 💾 Backend storage of images
+* 🤖 AI-based damage detection
+* 📊 Dashboard to view reports
+* 🔄 End-to-end working pipeline
 
 ---
 
 ## 📂 Project Structure
 
 ```
-project/
+road-damage-detection/
 │
-├── frontend/
-├── backend/
-├── model/
-├── images/
+├── frontend/        # React application
+├── backend/         # FastAPI server
+├── model/           # YOLOv8 model files
+├── uploads/         # Stored images
+├── reports/         # Detection results
 └── README.md
 ```
 
@@ -111,7 +160,7 @@ project/
 
 ## ▶️ How to Run
 
-### Backend
+### 🔹 Backend
 
 ```bash
 cd backend
@@ -119,7 +168,9 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
-### Frontend
+---
+
+### 🔹 Frontend
 
 ```bash
 cd frontend
@@ -129,23 +180,44 @@ npm start
 
 ---
 
+## 📸 System Workflow
+
+1. User uploads an image
+2. Image is sent to backend API
+3. YOLOv8 model processes the image
+4. Damage detection is performed
+5. Results are stored
+6. Dashboard displays reports
+
+---
+
 ## 👨‍💻 Team
 
-* **Chunduri Abhiram** (Team Lead) — mc240041011@iiti.ac.in
-* **Enakollu Mahidhar Reddy** — cse240001030@iiti.ac.in
-* **Chunchu Santhosh Rushendra** — ce240004013@iiti.ac.in
-* **Katammagari Manas Joel** — ce240004025@iiti.ac.in
+* **Chunduri Abhiram (Team Lead)**
+* Enakollu Mahidhar Reddy
+* Chunchu Santhosh Rushendra
+* Katammagari Manas Joel
 
 ---
 
 ## 🙏 Acknowledgment
 
-Special thanks to our mentor Sourav Rai for guidance on improving dataset quality and model performance.
+We sincerely thank our mentor **Sourav Rai** for valuable guidance, especially in improving dataset quality and model performance.
 
 ---
 
-## 📌 Note
+## 📌 Disclaimer
 
-This project is under development. Current outputs are for demonstration purposes and may not reflect final accuracy.
+This project is currently under development.
+The model predictions are for **demonstration purposes** and may not reflect real-world accuracy.
+
+---
+
+## ⭐ Future Scope
+
+* Deployment on cloud (AWS / Render)
+* Mobile app integration
+* Government/municipality integration
+* Automated reporting system
 
 ---
