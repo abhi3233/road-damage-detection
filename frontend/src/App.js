@@ -1,103 +1,52 @@
-import { useState } from "react";
-import axios from "axios";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate
+} from "react-router-dom";
+
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Upload from "./components/Upload";
 import Dashboard from "./Dashboard";
 
 function App() {
-  const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState(null);
-  const [location, setLocation] = useState(null);
-  const [result, setResult] = useState([]);
-
-  const handleFileChange = (e) => {
-    const selected = e.target.files[0];
-    setFile(selected);
-    setPreview(URL.createObjectURL(selected));
-  };
-
-  const getLocation = () => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setLocation({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
-      },
-      (error) => {
-        console.log(error);
-        alert("Location access denied");
-      }
-    );
-  };
-
-  const uploadImage = async () => {
-    if (!file) {
-      alert("Please select a file");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    if (location) {
-      formData.append("latitude", location.lat);
-      formData.append("longitude", location.lng);
-    }
-
-    try {
-      const res = await axios.post(
-        "http://127.0.0.1:8000/upload",
-        formData
-      );
-
-      setResult(res.data.detections || []);
-      alert("Upload successful!");
-    } catch (err) {
-      console.error(err);
-      alert("Upload failed");
-    }
-  };
-
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Road Damage Detection</h1>
+    <BrowserRouter>
+      <Routes>
 
-      <h2>Upload Image</h2>
+        {/* Default Route */}
+        <Route
+          path="/"
+          element={<Navigate to="/login" replace />}
+        />
 
-      <input type="file" onChange={handleFileChange} />
+        {/* Login */}
+        <Route
+          path="/login"
+          element={<Login />}
+        />
 
-      {preview && (
-        <div>
-          <h4>Preview:</h4>
-          <img src={preview} width="300" alt="preview" />
-        </div>
-      )}
+        {/* Register */}
+        <Route
+          path="/register"
+          element={<Register />}
+        />
 
-      <button onClick={getLocation}>Get GPS Location</button>
+        {/* Upload */}
+        <Route
+          path="/upload"
+          element={<Upload />}
+        />
 
-      {location && (
-        <p>
-          Latitude: {location.lat}, Longitude: {location.lng}
-        </p>
-      )}
+        {/* Dashboard */}
+        <Route
+          path="/dashboard"
+          element={<Dashboard />}
+        />
 
-      <button onClick={uploadImage}>Upload</button>
-
-      {result.length > 0 && (
-        <div>
-          <h3>Detection Results:</h3>
-          {result.map((item, index) => (
-            <div key={index}>
-              <p>Damage: {item.damage_type}</p>
-              <p>Confidence: {item.confidence}</p>
-            </div>
-          ))}
-        </div>
-      )}
-
-      <hr />
-
-      <Dashboard />
-    </div>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

@@ -1,83 +1,286 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
-  const [reports, setReports] = useState([]);
+
+  const [myReports, setMyReports] = useState([]);
+  const [publicReports, setPublicReports] = useState([]);
+  const [leaderboard, setLeaderboard] = useState([]);
+
+  const [view, setView] = useState("my");
+
   const [loading, setLoading] = useState(true);
 
-  const fetchReports = () => {
-    fetch("http://127.0.0.1:8000/reports")
-      .then(res => res.json())
-      .then(data => {
-        console.log("API Data:", data); // 🔥 DEBUG
+  const navigate = useNavigate();
 
-        if (Array.isArray(data)) {
-          setReports(data);
-        } else if (Array.isArray(data.reports)) {
-          setReports(data.reports);
-        } else {
-          console.error("Unexpected format:", data);
-          setReports([]);
-        }
+  const username = localStorage.getItem("username");
 
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("Fetch error:", err);
-        setLoading(false);
-      });
+
+  const fetchData = async () => {
+
+    try {
+
+      const myRes = await fetch(
+        `http://127.0.0.1:8000/myreports/${username}`
+      );
+
+      const myData = await myRes.json();
+
+
+      const publicRes = await fetch(
+        "http://127.0.0.1:8000/publicreports"
+      );
+
+      const publicData = await fetch(
+        "http://127.0.0.1:8000/publicreports"
+      );
+
+      const publicJson = await publicData.json();
+
+
+
+      const leaderRes = await fetch(
+        "http://127.0.0.1:8000/leaderboard"
+      );
+
+      const leaderData = await leaderRes.json();
+
+
+
+      setMyReports(myData);
+      setPublicReports(publicJson);
+      setLeaderboard(leaderData);
+
+      setLoading(false);
+
+
+    } catch(error) {
+
+      console.error(error);
+
+      setLoading(false);
+
+    }
+
   };
 
+
+
   useEffect(() => {
-    fetchReports();
+
+    fetchData();
+
   }, []);
 
+
+
+  const getImageUrl = (path) => {
+
+    if (!path) {
+      return "";
+    }
+
+
+    if (path.startsWith("http")) {
+      return path;
+    }
+
+
+    if (path.startsWith("/")) {
+      return `http://127.0.0.1:8000${path}`;
+    }
+
+
+    return `http://127.0.0.1:8000/${path}`;
+
+  };
+
+
+
+  const totalScore = myReports.reduce(
+    (total, report) => total + (report.points || 0),
+    0
+  );
+
+
+
+  const reports =
+    view === "my"
+      ? myReports
+      : publicReports;
+
+
+
   return (
-    <div>
-      <h2>Reports Dashboard</h2>
 
-      {/* 🔄 Loading state */}
-      {loading && <p>Loading reports...</p>}
+    <div style={{padding:"20px"}}>
 
-      {/* ❌ No data */}
-      {!loading && reports.length === 0 && (
-        <p>No reports found. Upload an image first.</p>
+
+      <h1>
+        Welcome {username}
+      </h1>
+
+
+
+      <button onClick={() => navigate("/upload")}>
+        Upload Road Damage
+      </button>
+
+
+
+      <hr />
+
+
+      <h2>
+        🏆 Leaderboard
+      </h2>
+
+
+      {leaderboard.slice(0,3).map((user,index)=>(
+
+        <p key={index}>
+
+          {index===0 && "🥇"}
+          {index===1 && "🥈"}
+          {index===2 && "🥉"}
+
+          {user.username} -
+          {user.score} Points
+
+        </p>
+
+      ))}
+
+
+
+      <hr />
+
+
+
+      <button onClick={() => setView("my")}>
+        My Uploads
+      </button>
+
+
+      <button
+        onClick={() => setView("public")}
+        style={{marginLeft:"10px"}}
+      >
+        Public Uploads
+      </button>
+
+
+
+      <hr />
+
+
+
+      {view==="my" && (
+
+        <h2>
+          My Total Score: {totalScore}
+        </h2>
+
       )}
 
-      {/* ✅ Display reports */}
-      {!loading &&
-        reports.length > 0 &&
-        reports.map((r) => (
-          <div
-            key={r.id}
-            style={{
-              border: "1px solid black",
-              margin: "10px",
-              padding: "10px"
+
+
+      {loading && <p>Loading...</p>}
+
+
+
+      {!loading && reports.length===0 && (
+
+        <p>
+          No uploads found
+        </p>
+
+      )}
+
+
+
+      {reports.map((r)=>(
+
+        <div
+          key={r.id}
+          style={{
+            border:"1px solid black",
+            margin:"10px",
+            padding:"10px"
+          }}
+        >
+
+
+          <img
+            src={getImageUrl(r.image_path)}
+            width="200"
+            alt="road damage"
+            onError={(e)=>{
+              e.target.style.display="none";
+              console.log("Image not found:", r.image_path);
             }}
-          >
-            {/* 🖼️ Image */}
-            <img
-              src={`http://127.0.0.1:8000/${r.image_path}`}
-              width="200"
-              alt="Report"
-              onError={(e) => {
-                e.target.src = "https://via.placeholder.com/200";
-              }}
-            />
+          />
 
-            {/* 📊 Data */}
-            <p><b>Damage:</b> {r.damage_type}</p>
-            <p><b>Confidence:</b> {r.confidence}</p>
-            <p><b>Location:</b> {r.latitude}, {r.longitude}</p>
-            <p><b>Time:</b> {r.timestamp}</p>
-          </div>
-        ))}
 
-      {/* 🔄 Manual refresh button */}
-      <button onClick={fetchReports}>Refresh Dashboard</button>
-      <button onClick={() => setReports([])}>Clear Dashboard</button>
+
+          <p>
+            <b>User:</b> {r.username}
+          </p>
+
+
+          <p>
+            <b>Damage:</b> {r.damage_type}
+          </p>
+
+
+          <p>
+            <b>Confidence:</b> {r.confidence}
+          </p>
+
+
+          <p>
+            <b>Latitude:</b> {r.latitude ?? "Not available"}
+          </p>
+
+
+          <p>
+            <b>Longitude:</b> {r.longitude ?? "Not available"}
+          </p>
+
+
+
+          {view==="my" && (
+
+            <p>
+              <b>Points:</b> {r.points}
+            </p>
+
+          )}
+
+
+
+          <p>
+            <b>Time:</b> {r.timestamp}
+          </p>
+
+
+        </div>
+
+      ))}
+
+
+
+      <button onClick={fetchData}>
+        Refresh
+      </button>
+
+
+
     </div>
+
   );
+
 }
+
 
 export default Dashboard;
