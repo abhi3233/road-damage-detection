@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./css/Login.css";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -27,8 +28,6 @@ function Login() {
         localStorage.setItem("username", data.username);
 
         alert(`Welcome ${data.username}!`);
-
-        // Go to Dashboard after login
         navigate("/dashboard");
       } else {
         alert(data.detail || "Invalid email or password");
@@ -40,44 +39,46 @@ function Login() {
   };
 
   return (
-    <div style={{ padding: "30px" }}>
-      <h2>Road Damage Detection System</h2>
+    <div className="loginPage">
+      <div className="loginMain">
+        <h1 className="loginTitle">
+          Road Damage Detection System
+        </h1>
 
-      <form onSubmit={loginUser}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+        <form className="loginForm" onSubmit={loginUser}>
+          <input
+            className="loginInput"
+            type="email"
+            placeholder="Enter Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
 
-        <br />
-        <br />
+          <input
+            className="loginInput"
+            type="password"
+            placeholder="Enter Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+          <div className="buttonContainer">
+            <button className="loginBtn" type="submit">
+              Login
+            </button>
 
-        <br />
-        <br />
-
-        <button type="submit">
-          Login
-        </button>
-
-        <button
-          type="button"
-          onClick={() => navigate("/register")}
-          style={{ marginLeft: "10px" }}
-        >
-          Register
-        </button>
-      </form>
+            <button
+              className="registerBtn"
+              type="button"
+              onClick={() => navigate("/register")}
+            >
+              Register
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

@@ -1,0 +1,224 @@
+/* ===========================
+   PAGE
+=========================== */
+.loginPage{
+    width:100%;
+    height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:20px;
+
+    box-sizing:border-box;
+}
+
+
+/* ===========================
+   LOGIN CARD
+=========================== */
+
+.loginMain{
+
+    width:430px;
+
+    max-width:100%;
+
+    background:#f8f8ef;
+
+    padding:45px 40px;
+
+    border-radius:18px;
+
+    border:1px solid #ddddcc;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
+
+}
+
+
+/* ===========================
+   TITLE
+=========================== */
+
+.loginTitle{
+
+    margin:0 0 40px;
+
+    text-align:center;
+
+    font-size:2rem;
+
+    font-weight:700;
+
+    color:#2d3436;
+
+}
+
+
+/* ===========================
+   FORM
+=========================== */
+
+.loginForm{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+
+/* ===========================
+   INPUTS
+=========================== */
+
+.loginInput{
+
+    width:100%;
+
+    padding:14px 18px;
+
+    border:1.5px solid #c8c8b8;
+
+    border-radius:10px;
+
+    background:white;
+
+    font-size:16px;
+
+    outline:none;
+
+    transition:.25s;
+
+}
+
+.loginInput:focus{
+
+    border-color:#2f80ed;
+
+    box-shadow:0 0 10px rgba(47,128,237,.25);
+
+}
+
+
+/* ===========================
+   BUTTON CONTAINER
+=========================== */
+
+.buttonContainer{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:15px;
+
+    margin-top:10px;
+
+}
+
+
+/* ===========================
+   BUTTONS
+=========================== */
+
+.loginBtn,
+.registerBtn{
+
+    flex:1;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    transition:.25s;
+
+}
+
+
+/* Login Button */
+
+.loginBtn{
+
+    background:#2f80ed;
+
+    color:white;
+
+}
+
+.loginBtn:hover{
+
+    background:#1668d3;
+
+    transform:translateY(-2px);
+
+    box-shadow:0 8px 18px rgba(47,128,237,.30);
+
+}
+
+
+/* Register Button */
+
+.registerBtn{
+
+    background:#ececec;
+
+    color:#333;
+
+}
+
+.registerBtn:hover{
+
+    background:#d9d9d9;
+
+    transform:translateY(-2px);
+
+}
+
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:600px){
+
+    .loginMain{
+
+        width:100%;
+
+        padding:35px 25px;
+
+    }
+
+    .loginTitle{
+
+        font-size:1.6rem;
+
+    }
+
+    .buttonContainer{
+
+        flex-direction:column;
+
+    }
+
+    .loginBtn,
+    .registerBtn{
+
+        width:100%;
+
+    }
+
+}

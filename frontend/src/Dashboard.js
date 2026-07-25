@@ -1,70 +1,66 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./pages/css/Dashboard.css";
 
 function Dashboard() {
-
   const [myReports, setMyReports] = useState([]);
   const [publicReports, setPublicReports] = useState([]);
   const [leaderboard, setLeaderboard] = useState([]);
-
   const [view, setView] = useState("my");
-
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
   const username = localStorage.getItem("username");
 
-
   const fetchData = async () => {
+    setLoading(true);
 
     try {
-
+      // ---------------- My Reports ----------------
       const myRes = await fetch(
         `http://127.0.0.1:8000/myreports/${username}`
       );
 
       const myData = await myRes.json();
 
+      console.log("========== MY REPORTS ==========");
+      console.log(myData);
 
+      // ---------------- Public Reports ----------------
       const publicRes = await fetch(
         "http://127.0.0.1:8000/publicreports"
       );
 
-      const publicData = await fetch(
-        "http://127.0.0.1:8000/publicreports"
-      );
+      const publicData = await publicRes.json();
 
-      const publicJson = await publicData.json();
+      console.log("========== PUBLIC REPORTS ==========");
+      console.log(publicData);
 
-
-
+      // ---------------- Leaderboard ----------------
       const leaderRes = await fetch(
         "http://127.0.0.1:8000/leaderboard"
       );
 
       const leaderData = await leaderRes.json();
 
-
+      console.log("========== LEADERBOARD ==========");
+      console.log(leaderData);
 
       setMyReports(myData);
-      setPublicReports(publicJson);
+      setPublicReports(publicData);
       setLeaderboard(leaderData);
 
-      setLoading(false);
+    } catch (error) {
 
+      console.error("Dashboard Error:", error);
 
-    } catch(error) {
-
-      console.error(error);
+    } finally {
 
       setLoading(false);
 
     }
-
   };
-
-
 
   useEffect(() => {
 
@@ -72,215 +68,247 @@ function Dashboard() {
 
   }, []);
 
-
-
   const getImageUrl = (path) => {
 
-    if (!path) {
-      return "";
-    }
+    if (!path) return "";
 
+    if (path.startsWith("http")) return path;
 
-    if (path.startsWith("http")) {
-      return path;
-    }
-
-
-    if (path.startsWith("/")) {
+    if (path.startsWith("/"))
       return `http://127.0.0.1:8000${path}`;
-    }
-
 
     return `http://127.0.0.1:8000/${path}`;
-
   };
-
-
-
-  const totalScore = myReports.reduce(
-    (total, report) => total + (report.points || 0),
-    0
-  );
-
-
 
   const reports =
     view === "my"
       ? myReports
       : publicReports;
 
+  const totalScore = myReports.reduce(
+    (sum, report) => sum + Number(report.points || 0),
+    0
+  );
 
+  console.log("Total Score =", totalScore);
 
   return (
+    <div className="dashboard">
 
-    <div style={{padding:"20px"}}>
+      {/* Header */}
 
+      <header className="dashboardHeader">
 
-      <h1>
-        Welcome {username}
-      </h1>
+        <div>
 
-
-
-      <button onClick={() => navigate("/upload")}>
-        Upload Road Damage
-      </button>
-
-
-
-      <hr />
-
-
-      <h2>
-        🏆 Leaderboard
-      </h2>
-
-
-      {leaderboard.slice(0,3).map((user,index)=>(
-
-        <p key={index}>
-
-          {index===0 && "🥇"}
-          {index===1 && "🥈"}
-          {index===2 && "🥉"}
-
-          {user.username} -
-          {user.score} Points
-
-        </p>
-
-      ))}
-
-
-
-      <hr />
-
-
-
-      <button onClick={() => setView("my")}>
-        My Uploads
-      </button>
-
-
-      <button
-        onClick={() => setView("public")}
-        style={{marginLeft:"10px"}}
-      >
-        Public Uploads
-      </button>
-
-
-
-      <hr />
-
-
-
-      {view==="my" && (
-
-        <h2>
-          My Total Score: {totalScore}
-        </h2>
-
-      )}
-
-
-
-      {loading && <p>Loading...</p>}
-
-
-
-      {!loading && reports.length===0 && (
-
-        <p>
-          No uploads found
-        </p>
-
-      )}
-
-
-
-      {reports.map((r)=>(
-
-        <div
-          key={r.id}
-          style={{
-            border:"1px solid black",
-            margin:"10px",
-            padding:"10px"
-          }}
-        >
-
-
-          <img
-            src={getImageUrl(r.image_path)}
-            width="200"
-            alt="road damage"
-            onError={(e)=>{
-              e.target.style.display="none";
-              console.log("Image not found:", r.image_path);
-            }}
-          />
-
-
+          <h1>Road Damage Detection System</h1>
 
           <p>
-            <b>User:</b> {r.username}
+            Welcome,
+            <strong> {username}</strong>
           </p>
-
-
-          <p>
-            <b>Damage:</b> {r.damage_type}
-          </p>
-
-
-          <p>
-            <b>Confidence:</b> {r.confidence}
-          </p>
-
-
-          <p>
-            <b>Latitude:</b> {r.latitude ?? "Not available"}
-          </p>
-
-
-          <p>
-            <b>Longitude:</b> {r.longitude ?? "Not available"}
-          </p>
-
-
-
-          {view==="my" && (
-
-            <p>
-              <b>Points:</b> {r.points}
-            </p>
-
-          )}
-
-
-
-          <p>
-            <b>Time:</b> {r.timestamp}
-          </p>
-
 
         </div>
 
-      ))}
+        <div className="headerButtons">
 
+          <button
+            className="uploadButton"
+            onClick={() => navigate("/upload")}
+          >
+            Upload Image
+          </button>
 
+          <button
+            className="refreshButton"
+            onClick={fetchData}
+          >
+            Refresh
+          </button>
 
-      <button onClick={fetchData}>
-        Refresh
-      </button>
+        </div>
 
+      </header>
 
+      {/* Leaderboard */}
+
+      <section className="leaderboardSection">
+
+        <h2>🏆 Top Contributors</h2>
+
+        <div className="leaderboardCards">
+
+          {leaderboard.slice(0, 3).map((user, index) => (
+
+            <div
+              className="leaderCard"
+              key={index}
+            >
+
+              <div className="leaderRank">
+
+                {index === 0 && "🥇"}
+                {index === 1 && "🥈"}
+                {index === 2 && "🥉"}
+
+              </div>
+
+              <h3>{user.username}</h3>
+
+              <p>{user.score} Points</p>
+
+            </div>
+
+          ))}
+
+        </div>
+
+      </section>
+
+      {/* Toolbar */}
+
+      <section className="toolbar">
+
+        <div className="tabButtons">
+
+          <button
+            className={view === "my" ? "activeTab" : ""}
+            onClick={() => setView("my")}
+          >
+            My Reports
+          </button>
+
+          <button
+            className={view === "public" ? "activeTab" : ""}
+            onClick={() => setView("public")}
+          >
+            Public Reports
+          </button>
+
+        </div>
+
+        {view === "my" && (
+
+          <div className="scoreCard">
+
+            <span>Total Score</span>
+
+            <h2>{totalScore}</h2>
+
+          </div>
+
+        )}
+
+      </section>
+
+      {/* Loading */}
+
+      {loading && (
+
+        <div className="loading">
+
+          Loading reports...
+
+        </div>
+
+      )}
+
+      {!loading && reports.length === 0 && (
+
+        <div className="loading">
+
+          No reports available.
+
+        </div>
+
+      )}
+
+      {/* Reports */}
+
+      <section className="reportGrid">
+
+        {reports.map((r) => (
+
+          <div
+            className="reportCard"
+            key={r.id}
+          >
+
+            <img
+              className="reportImage"
+              src={getImageUrl(r.image_path)}
+              alt="Road Damage"
+              onError={(e) => {
+                e.target.style.display = "none";
+              }}
+            />
+
+            <div className="reportBody">
+
+              <h3>{r.damage_type}</h3>
+
+              <p>
+
+                <strong>User:</strong> {r.username}
+
+              </p>
+
+              <p>
+
+                <strong>Confidence:</strong>{" "}
+
+                {r.confidence
+                  ? (Number(r.confidence) * 100).toFixed(1)
+                  : 0}%
+
+              </p>
+
+              <p>
+
+                <strong>Latitude:</strong>{" "}
+
+                {r.latitude ?? "--"}
+
+              </p>
+
+              <p>
+
+                <strong>Longitude:</strong>{" "}
+
+                {r.longitude ?? "--"}
+
+              </p>
+
+              {view === "my" && (
+
+                <p>
+
+                  <strong>Points:</strong> {r.points}
+
+                </p>
+
+              )}
+
+              <p>
+
+                <strong>Reported:</strong>{" "}
+
+                {r.timestamp
+                  ? new Date(r.timestamp).toLocaleString()
+                  : "--"}
+
+              </p>
+
+            </div>
+
+          </div>
+
+        ))}
+
+      </section>
 
     </div>
-
   );
-
 }
-
 
 export default Dashboard;

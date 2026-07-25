@@ -10,6 +10,7 @@ import Register from "./pages/Register";
 import Upload from "./components/Upload";
 import Dashboard from "./Dashboard";
 
+
 function App() {
   return (
     <BrowserRouter>

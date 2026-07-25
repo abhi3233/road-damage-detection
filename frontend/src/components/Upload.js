@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import "./Upload.css";
 
 function Upload() {
   const [file, setFile] = useState(null);
@@ -20,7 +21,6 @@ function Upload() {
     }
   };
 
-
   const getLocation = () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -35,35 +35,25 @@ function Upload() {
     );
   };
 
-
   const uploadImage = async () => {
-
     if (!file) {
       alert("Please select an image");
       return;
     }
 
-
     const formData = new FormData();
 
     formData.append("file", file);
-
 
     if (location) {
       formData.append("latitude", location.lat);
       formData.append("longitude", location.lng);
     }
 
-
-    const username = localStorage.getItem("username");
-
-    formData.append("username", username);
-
+    formData.append("username", localStorage.getItem("username"));
 
     try {
-
       const token = localStorage.getItem("token");
-
 
       const res = await axios.post(
         "http://127.0.0.1:8000/upload",
@@ -75,141 +65,119 @@ function Upload() {
         }
       );
 
-
-      // successful upload only
       setResult(res.data.detections || []);
 
-      alert("Upload successful");
+      alert("Upload Successful!");
 
-
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 1500);
-
+      setTimeout(() => navigate("/dashboard"), 1500);
 
     } catch (error) {
 
       console.error(error);
 
-
-      // show backend error message
-      if (error.response && error.response.data.detail) {
-
+      if (error.response?.data?.detail) {
         alert(error.response.data.detail);
-
       } else {
-
-        alert("Upload failed");
-
+        alert("Upload Failed");
       }
-
-
-      // stop here, do not navigate
-      return;
-
     }
-
   };
 
-
   return (
+    <div className="uploadPage">
 
-    <div style={{ padding: "20px" }}>
+      <div className="uploadCard">
 
-      <h1>Road Damage Detection</h1>
+        <h1 className="uploadTitle">
+          Road Damage Detection
+        </h1>
 
-      <h2>Upload Image</h2>
+        <h2 className="uploadSubtitle">
+          Upload Road Image
+        </h2>
 
+        <input
+          className="fileInput"
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+        />
 
-      <input
-        type="file"
-        accept="image/*"
-        onChange={handleFileChange}
-      />
+        {preview && (
+          <div className="previewContainer">
 
+            <h3>Preview</h3>
 
-      {preview && (
+            <img
+              className="previewImage"
+              src={preview}
+              alt="Preview"
+            />
 
-        <div>
+          </div>
+        )}
 
-          <h4>Preview:</h4>
+        <div className="buttonGroup">
 
-          <img
-            src={preview}
-            width="300"
-            alt="preview"
-          />
+          <button
+            className="locationButton"
+            onClick={getLocation}
+          >
+            📍 Get GPS Location
+          </button>
 
-        </div>
-
-      )}
-
-
-      <br />
-
-
-      <button onClick={getLocation}>
-        Get GPS Location
-      </button>
-
-
-
-      {location && (
-
-        <p>
-          Latitude: {location.lat}
-          <br />
-          Longitude: {location.lng}
-        </p>
-
-      )}
-
-
-
-      <br />
-
-
-      <button onClick={uploadImage}>
-        Upload
-      </button>
-
-
-
-      {result.length > 0 && (
-
-        <div>
-
-          <h3>Detection Results</h3>
-
-
-          {result.map((item,index)=>(
-
-            <div key={index}>
-
-              <p>
-                Damage: {item.damage_type}
-              </p>
-
-
-              <p>
-                Confidence: {item.confidence}
-              </p>
-
-
-            </div>
-
-          ))}
+          <button
+            className="uploadButton"
+            onClick={uploadImage}
+          >
+            ⬆ Upload
+          </button>
 
         </div>
 
-      )}
+        {location && (
+          <div className="locationCard">
 
+            <p><strong>Latitude:</strong> {location.lat}</p>
+
+            <p><strong>Longitude:</strong> {location.lng}</p>
+
+          </div>
+        )}
+
+        {result.length > 0 && (
+
+          <div className="resultSection">
+
+            <h2>Detection Results</h2>
+
+            {result.map((item,index)=>(
+
+              <div
+                className="resultCard"
+                key={index}
+              >
+
+                <p>
+                  <strong>Damage:</strong> {item.damage_type}
+                </p>
+
+                <p>
+                  <strong>Confidence:</strong> {item.confidence}
+                </p>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        )}
+
+      </div>
 
     </div>
-
   );
-
 }
-
 
 export default Upload;

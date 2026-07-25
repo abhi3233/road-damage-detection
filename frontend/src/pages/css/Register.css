@@ -1,0 +1,240 @@
+/* ===========================
+   PAGE
+=========================== */
+
+.registerPage{
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:30px;
+
+    background:#eef2f7;
+}
+
+
+/* ===========================
+   CARD
+=========================== */
+
+.registerMain{
+
+    width:460px;
+
+    max-width:100%;
+
+    background:#f8f8ef;
+
+    padding:45px 40px;
+
+    border-radius:18px;
+
+    border:1px solid #ddddcc;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
+
+}
+
+
+/* ===========================
+   TITLES
+=========================== */
+
+.registerTitle{
+
+    margin:0;
+
+    text-align:center;
+
+    font-size:2rem;
+
+    font-weight:700;
+
+    color:#2d3436;
+
+}
+
+.registerSubtitle{
+
+    text-align:center;
+
+    margin:12px 0 35px;
+
+    color:#666;
+
+    font-size:1.2rem;
+
+    font-weight:500;
+
+}
+
+
+/* ===========================
+   FORM
+=========================== */
+
+.registerForm{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+
+/* ===========================
+   INPUTS
+=========================== */
+
+.registerInput{
+
+    width:100%;
+
+    padding:14px 18px;
+
+    border:1.5px solid #c8c8b8;
+
+    border-radius:10px;
+
+    background:white;
+
+    font-size:16px;
+
+    outline:none;
+
+    transition:.25s;
+
+}
+
+.registerInput:focus{
+
+    border-color:#2f80ed;
+
+    box-shadow:0 0 10px rgba(47,128,237,.25);
+
+}
+
+
+/* ===========================
+   BUTTONS
+=========================== */
+
+.registerButtonContainer{
+
+    display:flex;
+
+    gap:15px;
+
+    margin-top:10px;
+
+}
+
+.registerBtn,
+.backBtn{
+
+    flex:1;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:10px;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+
+/* Register Button */
+
+.registerBtn{
+
+    background:#2f80ed;
+
+    color:white;
+
+}
+
+.registerBtn:hover{
+
+    background:#1668d3;
+
+    transform:translateY(-2px);
+
+    box-shadow:0 8px 18px rgba(47,128,237,.30);
+
+}
+
+
+/* Back Button */
+
+.backBtn{
+
+    background:#ececec;
+
+    color:#333;
+
+}
+
+.backBtn:hover{
+
+    background:#d9d9d9;
+
+    transform:translateY(-2px);
+
+}
+
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:600px){
+
+    .registerMain{
+
+        width:100%;
+
+        padding:35px 25px;
+
+    }
+
+    .registerTitle{
+
+        font-size:1.6rem;
+
+    }
+
+    .registerSubtitle{
+
+        font-size:1rem;
+
+    }
+
+    .registerButtonContainer{
+
+        flex-direction:column;
+
+    }
+
+    .registerBtn,
+    .backBtn{
+
+        width:100%;
+
+    }
+
+}

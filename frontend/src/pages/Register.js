@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./css/Register.css";
 
 function Register() {
   const navigate = useNavigate();
@@ -26,8 +27,6 @@ function Register() {
 
       if (response.ok) {
         alert("Registration successful! Please login.");
-
-        // Go back to Login page
         navigate("/");
       } else {
         alert(data.detail || "Registration failed");
@@ -39,57 +38,70 @@ function Register() {
   };
 
   return (
-    <div style={{ padding: "30px" }}>
-      <h2>Road Damage Detection System</h2>
+    <div className="registerPage">
 
-      <h3>Register</h3>
+      <div className="registerMain">
 
-      <form onSubmit={registerUser}>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
+        <h1 className="registerTitle">
+          Road Damage Detection System
+        </h1>
 
-        <br />
-        <br />
+        <h2 className="registerSubtitle">
+          Create Account
+        </h2>
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+        <form className="registerForm" onSubmit={registerUser}>
 
-        <br />
-        <br />
+          <input
+            className="registerInput"
+            type="text"
+            placeholder="Enter Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+          <input
+            className="registerInput"
+            type="email"
+            placeholder="Enter Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
 
-        <br />
-        <br />
+          <input
+            className="registerInput"
+            type="password"
+            placeholder="Enter Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
 
-        <button type="submit">
-          Register
-        </button>
+          <div className="registerButtonContainer">
 
-        <button
-          type="button"
-          onClick={() => navigate("/")}
-          style={{ marginLeft: "10px" }}
-        >
-          Back to Login
-        </button>
-      </form>
+            <button
+              className="registerBtn"
+              type="submit"
+            >
+              Register
+            </button>
+
+            <button
+              className="backBtn"
+              type="button"
+              onClick={() => navigate("/")}
+            >
+              Back to Login
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
     </div>
   );
 }
