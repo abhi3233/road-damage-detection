@@ -221,7 +221,7 @@ def create_token(data):
 
 app = FastAPI()
 
-
+os.makedirs("uploads", exist_ok=True)
 
 app.mount(
     "/uploads",
