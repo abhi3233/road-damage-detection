@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+ultralytics
+sqlalchemy
+passlib[bcrypt]
+bcrypt==4.3.0
+python-jose[cryptography]
+python-multipart
