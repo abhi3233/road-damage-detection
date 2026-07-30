@@ -498,33 +498,30 @@ async def upload_image(
                 cls_id
             ]
 
+            # Translate RDD2022 Codes to readable names
+            damage_mapping = {
+                "D00": "Longitudinal Crack",
+                "D10": "Transverse Crack",
+                "D20": "Alligator Crack",
+                "D40": "Pothole"
+            }
+            
+            readable_label = damage_mapping.get(label.upper(), label)
 
-
-            # Points system
-            if "pothole" in label.lower():
-
-                points = max(points, 100)
-
-
-            elif "crack" in label.lower():
-
-                  points = max(points, 50)
-
-
+            # Points system based on the RDD codes
+            if label.upper() == "D40":
+                points = max(points, 100) # Potholes give 100 pts
+            elif label.upper() in ["D00", "D10", "D20"]:
+                points = max(points, 50)  # Cracks give 50 pts
 
             detections.append(
-
                 {
-
-                    "damage_type": label,
-
+                    "damage_type": readable_label,
                     "confidence": round(
                         confidence,
                         2
                     )
-
                 }
-
             )
 
 
@@ -705,6 +702,32 @@ def get_reports(
 
 
     reports = db.query(Report).all()
-
-
     return reports 
+
+# ================= DELETE REPORT =================
+@app.delete("/reports/{report_id}")
+def delete_report(
+    report_id: int,
+    db = Depends(get_db)
+):
+    report = db.query(Report).filter(Report.id == report_id).first()
+    
+    if not report:
+        raise HTTPException(status_code=404, detail="Report not found")
+        
+    # Delete the image file if it exists
+    if report.image_path and os.path.exists(report.image_path):
+        try:
+            os.remove(report.image_path)
+        except Exception as e:
+            print(f"Failed to delete image: {e}")
+            
+    # Optionally deduct points from user? 
+    # user = db.query(User).filter(User.username == report.username).first()
+    # if user and report.points:
+    #     user.total_points = max(0, user.total_points - report.points)
+            
+    db.delete(report)
+    db.commit()
+    
+    return {"message": "Report deleted successfully"}

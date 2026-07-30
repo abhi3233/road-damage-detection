@@ -141,3 +141,32 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+/model/RDD_SPLIT
+model/runs
+
+# Python / Backend
+__pycache__/
+*.pyc
+venv/
+env/
+.env
+
+# SQLite Database
+*.db
+*.sqlite3
+
+# Uploaded Files
+backend/uploads/
+uploads/
+
+# Machine Learning / YOLO
+*.pt
+*.onnx
+runs/
+**/runs/
+
+# Large Archives
+*.zip
+*.tar.gz
+*.rar
