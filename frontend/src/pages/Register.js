@@ -103,13 +103,12 @@ function Register() {
 
               <div style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>
                 Already have an account?{' '}
-                <a 
-                  href="#" 
-                  onClick={(e) => { e.preventDefault(); navigate("/"); }}
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontWeight: '600', marginLeft: '4px' }}
+                <span 
+                  onClick={() => navigate("/")}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontWeight: '600', marginLeft: '4px', cursor: 'pointer', color: 'var(--accent-primary)' }}
                 >
                   <ArrowLeft size={14} /> Back to login
-                </a>
+                </span>
               </div>
             </div>
           </form>

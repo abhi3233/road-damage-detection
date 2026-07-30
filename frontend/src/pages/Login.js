@@ -89,13 +89,12 @@ function Login() {
 
               <div style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>
                 Don't have an account?{' '}
-                <a 
-                  href="#" 
-                  onClick={(e) => { e.preventDefault(); navigate("/register"); }}
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontWeight: '600', marginLeft: '4px' }}
+                <span 
+                  onClick={() => navigate("/register")}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontWeight: '600', marginLeft: '4px', cursor: 'pointer', color: 'var(--accent-primary)' }}
                 >
                   Create one <ArrowRight size={14} />
-                </a>
+                </span>
               </div>
             </div>
           </form>
