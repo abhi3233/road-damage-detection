@@ -12,19 +12,17 @@ function Register() {
   const registerUser = async (e) => {
     e.preventDefault();
 
-    const payload = {
-      username: username,
-      email: email,
-      password: password,
-    };
+    const formData = new FormData();
+    formData.append("username", username);
+    formData.append("email", email);
+    formData.append("password", password);
 
     const API_URL = process.env.REACT_APP_API_URL || "http://127.0.0.1:8000";
 
     try {
       const response = await fetch(`${API_URL}/register`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: formData,
       });
 
       const data = await response.json();
@@ -33,7 +31,11 @@ function Register() {
         alert("Registration successful! You can now login.");
         navigate("/");
       } else {
-        alert(data.detail || "Registration failed");
+        if (Array.isArray(data.detail)) {
+          alert("Error: " + data.detail.map(e => e.msg).join(", "));
+        } else {
+          alert(data.detail || "Registration failed");
+        }
       }
     } catch (error) {
       console.error(error);
