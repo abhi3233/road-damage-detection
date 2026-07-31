@@ -235,7 +235,19 @@ function Dashboard() {
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '14px' }}>
                         <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-secondary)' }}>
                           <MapPin size={14} />
-                          {r.latitude ? `${parseFloat(r.latitude).toFixed(3)}, ${parseFloat(r.longitude).toFixed(3)}` : "No GPS"}
+                          {r.latitude ? (
+                            <>
+                              {`${parseFloat(r.latitude).toFixed(3)}, ${parseFloat(r.longitude).toFixed(3)}`}
+                              <a 
+                                href={`https://www.google.com/maps?q=${r.latitude},${r.longitude}`} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                style={{ marginLeft: '6px', padding: '2px 6px', background: 'var(--accent-primary)', color: '#fff', borderRadius: '4px', textDecoration: 'none', fontSize: '12px', fontWeight: '500' }}
+                              >
+                                View
+                              </a>
+                            </>
+                          ) : "No GPS"}
                         </span>
                         {view === "my" && (
                           <span style={{ fontWeight: '700', color: 'var(--accent-primary)' }}>+{r.points} pts</span>
