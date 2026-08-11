@@ -6,7 +6,7 @@ from ultralytics import YOLO
 import os
 import shutil
 import hashlib
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from passlib.context import CryptContext
 from jose import jwt, JWTError
@@ -122,7 +122,9 @@ class User(Base):
 
 
     username = Column(
-        String
+        String,
+        unique=True,
+        index=True
     )
 
 
@@ -154,7 +156,7 @@ Base.metadata.create_all(
 # ================= AUTH =================
 
 
-SECRET_KEY = "road_damage_secret_key"
+SECRET_KEY = os.environ.get("SECRET_KEY", "road_damage_secret_key")
 
 ALGORITHM = "HS256"
 
@@ -196,7 +198,7 @@ def verify_password(
 
 def create_token(data):
 
-    expire = datetime.utcnow() + timedelta(
+    expire = datetime.now(timezone.utc) + timedelta(
         minutes=ACCESS_TOKEN_EXPIRE_MINUTES
     )
 
@@ -268,7 +270,10 @@ def get_db():
     finally:
 
         db.close()
-        # ================= HOME =================
+
+
+
+# ================= HOME =================
 
 
 @app.get("/")
@@ -437,7 +442,7 @@ async def upload_image(
     file_path = os.path.join(
         upload_dir,
         file.filename
-    )
+    ).replace("\\", "/")
 
 
 
@@ -546,6 +551,21 @@ async def upload_image(
 
 
 
+    # Pick the most severe detection to store in DB (not just the first)
+    primary_detection = detections[0]
+    if points == 100:
+        for d in detections:
+            if d["damage_type"] == "Pothole":
+                primary_detection = d
+                break
+    elif points == 50:
+        for d in detections:
+            if d["damage_type"] in ["Longitudinal Crack", "Transverse Crack", "Alligator Crack"]:
+                primary_detection = d
+                break
+
+
+
 
     report = Report(
 
@@ -553,9 +573,9 @@ async def upload_image(
 
         username=username,
 
-        damage_type=detections[0]["damage_type"],
+        damage_type=primary_detection["damage_type"],
 
-        confidence=detections[0]["confidence"],
+        confidence=primary_detection["confidence"],
 
         points=points,
 
@@ -661,7 +681,7 @@ def leaderboard(
 
     users = db.query(User).order_by(
         User.total_points.desc()
-    ).limit(3).all()
+    ).limit(5).all()
 
 
 

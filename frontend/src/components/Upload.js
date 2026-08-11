@@ -237,7 +237,7 @@ function Upload() {
                       alignItems: 'center'
                     }}>
                       <span style={{ textTransform: 'capitalize', fontWeight: '600', fontSize: '16px' }}>
-                        {item.damage_type === "none" ? "No Damage Detected" : item.damage_type}
+                        {item.damage_type === "no_damage" ? "No Damage Detected" : item.damage_type}
                       </span>
                       <span style={{ 
                         color: 'var(--accent-primary)', 

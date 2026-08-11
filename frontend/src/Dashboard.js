@@ -30,7 +30,7 @@ function Dashboard() {
       setPublicReports(publicData);
       setLeaderboard(leaderData);
       setLoading(false);
-    } catch(error) {
+    } catch (error) {
       console.error(error);
       setLoading(false);
     }
@@ -97,7 +97,7 @@ function Dashboard() {
     <>
       <div className="app-background"></div>
       <div className="page-container animate-fade-in">
-        
+
         {/* Navigation Bar */}
         <div className="glass-card" style={{ padding: '20px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
           <h1 style={{ margin: 0, fontSize: '28px', display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -118,7 +118,7 @@ function Dashboard() {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 3fr', gap: '32px' }}>
-          
+
           {/* Left Sidebar */}
           <div className="animate-fade-up delay-100">
             <div className="glass-card glass-card-compact hover-lift" style={{ marginBottom: '24px' }}>
@@ -134,12 +134,12 @@ function Dashboard() {
               <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px', fontSize: '18px' }}>
                 <Trophy size={20} color="var(--warning)" /> Top Contributors
               </h3>
-              
+
               <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                 {leaderboard.slice(0, 5).map((user, index) => (
                   <li key={index} style={{ display: 'flex', alignItems: 'center', padding: '12px', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', marginBottom: '8px', border: '1px solid var(--glass-border)' }}>
                     <div style={{ fontSize: '20px', width: '32px', textAlign: 'center', marginRight: '12px' }}>
-                      {index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : <span style={{fontSize: '14px', color: 'var(--text-secondary)'}}>#{index + 1}</span>}
+                      {index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : <span style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>#{index + 1}</span>}
                     </div>
                     <div style={{ flexGrow: 1, fontWeight: '500' }}>{user.username}</div>
                     <div style={{ fontWeight: '600', color: 'var(--accent-primary)' }}>{user.score}</div>
@@ -152,17 +152,17 @@ function Dashboard() {
           {/* Right Content */}
           <div className="animate-fade-up delay-200">
             <div className="glass-card" style={{ padding: '24px' }}>
-              
+
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
                 <div style={{ display: 'flex', gap: '12px', background: 'rgba(0,0,0,0.3)', padding: '6px', borderRadius: '16px', border: '1px solid var(--glass-border)' }}>
-                  <button 
+                  <button
                     className={`btn ${view === "my" ? "btn-primary" : "btn-secondary"}`}
                     style={{ padding: '10px 24px', border: 'none', borderRadius: '12px' }}
                     onClick={() => setView("my")}
                   >
                     My Uploads
                   </button>
-                  <button 
+                  <button
                     className={`btn ${view === "public" ? "btn-primary" : "btn-secondary"}`}
                     style={{ padding: '10px 24px', border: 'none', borderRadius: '12px' }}
                     onClick={() => setView("public")}
@@ -170,7 +170,7 @@ function Dashboard() {
                     Public Gallery
                   </button>
                 </div>
-                
+
                 <button className="btn btn-secondary" onClick={fetchData}>
                   <RefreshCw size={16} /> Refresh
                 </button>
@@ -197,7 +197,7 @@ function Dashboard() {
               ) : (
                 <div className="masonry-grid">
                   {reports.map((r, i) => (
-                    <div key={r.id} className={`glass-card glass-card-compact hover-lift animate-fade-up delay-${(i%3 + 1)*100}`}>
+                    <div key={r.id} className={`glass-card glass-card-compact hover-lift animate-fade-up delay-${(i % 3 + 1) * 100}`}>
                       <img
                         src={getImageUrl(r.image_path)}
                         alt={r.damage_type}
@@ -206,14 +206,14 @@ function Dashboard() {
                         onClick={() => setSelectedImage(getImageUrl(r.image_path))}
                         onError={(e) => { e.target.style.display = "none"; }}
                       />
-                      
+
                       <div style={{ marginBottom: '16px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
                           <div style={{ fontSize: '18px', fontWeight: '600', textTransform: 'capitalize' }}>
                             {formatDamageType(r.damage_type)}
                           </div>
                           {view === "my" && (
-                            <button 
+                            <button
                               onClick={() => handleDeleteReport(r.id)}
                               style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '4px' }}
                               title="Delete Record"
@@ -229,18 +229,18 @@ function Dashboard() {
                           </span>
                         </div>
                       </div>
-                      
+
                       <hr style={{ margin: '12px 0' }} />
-                      
+
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '14px' }}>
                         <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-secondary)' }}>
                           <MapPin size={14} />
                           {r.latitude ? (
                             <>
                               {`${parseFloat(r.latitude).toFixed(3)}, ${parseFloat(r.longitude).toFixed(3)}`}
-                              <a 
-                                href={`https://www.google.com/maps?q=${r.latitude},${r.longitude}`} 
-                                target="_blank" 
+                              <a
+                                href={`https://www.google.com/maps?q=${r.latitude},${r.longitude}`}
+                                target="_blank"
                                 rel="noopener noreferrer"
                                 style={{ marginLeft: '6px', padding: '2px 6px', background: 'var(--accent-primary)', color: '#fff', borderRadius: '4px', textDecoration: 'none', fontSize: '12px', fontWeight: '500' }}
                               >
@@ -265,7 +265,7 @@ function Dashboard() {
 
       {/* Fullscreen Image Modal */}
       {selectedImage && (
-        <div 
+        <div
           style={{
             position: 'fixed',
             top: 0, left: 0, width: '100vw', height: '100vh',
@@ -279,18 +279,18 @@ function Dashboard() {
           }}
           onClick={() => setSelectedImage(null)}
         >
-          <img 
-            src={selectedImage} 
-            alt="Preview" 
-            style={{ 
-              maxWidth: '100%', 
-              maxHeight: '100%', 
+          <img
+            src={selectedImage}
+            alt="Preview"
+            style={{
+              maxWidth: '100%',
+              maxHeight: '100%',
               objectFit: 'contain',
               borderRadius: '12px',
               boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
-            }} 
+            }}
           />
-          <button 
+          <button
             style={{
               position: 'absolute',
               top: '24px', right: '24px',

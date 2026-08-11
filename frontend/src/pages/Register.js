@@ -29,7 +29,7 @@ function Register() {
 
       if (response.ok) {
         alert("Registration successful! You can now login.");
-        navigate("/");
+        navigate("/login");
       } else {
         if (Array.isArray(data.detail)) {
           alert("Error: " + data.detail.map(e => e.msg).join(", "));
