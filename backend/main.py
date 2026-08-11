@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, Form, Depends, HTTPException
+from fastapi import FastAPI, File, UploadFile, Form, Depends, HTTPException, Body, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from ultralytics import YOLO
@@ -6,10 +6,45 @@ from ultralytics import YOLO
 import os
 import shutil
 import hashlib
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from datetime import datetime, timedelta, timezone
+from dotenv import load_dotenv
+
+load_dotenv()
+
+EMAIL_SENDER = os.environ.get("EMAIL_SENDER", "")
+EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD", "")
+
+def send_welcome_email(to_email: str, username: str):
+    if not EMAIL_SENDER or not EMAIL_PASSWORD:
+        print(f"Skipping welcome email for {to_email}: EMAIL_SENDER or EMAIL_PASSWORD not set in .env")
+        return
+    
+    try:
+        msg = MIMEMultipart()
+        msg['From'] = EMAIL_SENDER
+        msg['To'] = to_email
+        msg['Subject'] = "Welcome to Road Damage Scanner!"
+        
+        body = f"Hi {username},\n\nWelcome to Road Damage Scanner! We're excited to have you on board.\n\nStart uploading images of road damage to help keep the streets safe, and earn points while you do it!\n\nBest,\nThe Road Damage Scanner Team"
+        msg.attach(MIMEText(body, 'plain'))
+        
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(EMAIL_SENDER, EMAIL_PASSWORD)
+        server.send_message(msg)
+        server.quit()
+        print(f"Welcome email sent successfully to {to_email}")
+    except Exception as e:
+        print(f"Failed to send email to {to_email}: {e}")
 
 from passlib.context import CryptContext
 from jose import jwt, JWTError
+
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
 
 from sqlalchemy import (
     create_engine,
@@ -162,6 +197,8 @@ ALGORITHM = "HS256"
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "")
+
 
 
 pwd_context = CryptContext(
@@ -291,15 +328,11 @@ def home():
 
 @app.post("/register")
 def register(
-
+    background_tasks: BackgroundTasks,
     username: str = Form(...),
-
     email: str = Form(...),
-
     password: str = Form(...),
-
     db = Depends(get_db)
-
 ):
 
 
@@ -333,15 +366,13 @@ def register(
 
 
     db.add(new_user)
-
     db.commit()
 
-
+    # Send email in background
+    background_tasks.add_task(send_welcome_email, email, username)
 
     return {
-
         "message": "User created successfully"
-
     }
 
 
@@ -408,6 +439,55 @@ def login(
     }
 
 
+
+
+# ================= GOOGLE AUTH =================
+
+
+@app.post("/auth/google")
+def google_auth(
+    background_tasks: BackgroundTasks,
+    token: str = Body(..., embed=True),
+    db = Depends(get_db)
+):
+    try:
+        idinfo = id_token.verify_oauth2_token(
+            token,
+            google_requests.Request(),
+            GOOGLE_CLIENT_ID,
+            clock_skew_in_seconds=10
+        )
+    except ValueError as e:
+        print(f"Token validation error: {e}")
+        raise HTTPException(status_code=401, detail=f"Invalid Google token: {str(e)}")
+
+    email = idinfo["email"]
+    name = idinfo.get("name", email.split("@")[0])
+
+    user = db.query(User).filter(User.email == email).first()
+
+    if not user:
+        # Create a new user from Google account
+        user = User(
+            username=name,
+            email=email,
+            password="",  # no password for Google users
+            total_points=0
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+
+        # Send welcome email for new Google sign-ups
+        background_tasks.add_task(send_welcome_email, email, name)
+
+    access_token = create_token({"sub": user.email})
+
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "username": user.username
+    }
 
 
 # ================= UPLOAD =================

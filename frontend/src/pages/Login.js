@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LogIn, ArrowRight, Activity } from "lucide-react";
+import { GoogleLogin } from "@react-oauth/google";
+
+const API_URL = process.env.REACT_APP_API_URL || "http://127.0.0.1:8000";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -15,8 +18,6 @@ function Login() {
     formData.append("email", email);
     formData.append("password", password);
 
-    const API_URL = process.env.REACT_APP_API_URL || "http://127.0.0.1:8000";
-
     try {
       const response = await fetch(`${API_URL}/login`, {
         method: "POST",
@@ -28,10 +29,32 @@ function Login() {
       if (response.ok) {
         localStorage.setItem("token", data.access_token);
         localStorage.setItem("username", data.username);
-
         navigate("/dashboard");
       } else {
         alert(data.detail || "Invalid email or password");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Cannot connect to the backend.");
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      const response = await fetch(`${API_URL}/auth/google`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: credentialResponse.credential }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem("token", data.access_token);
+        localStorage.setItem("username", data.username);
+        navigate("/dashboard");
+      } else {
+        alert(data.detail || "Google sign-in failed");
       }
     } catch (error) {
       console.error(error);
@@ -70,7 +93,7 @@ function Login() {
               />
             </div>
 
-            <div className="form-group delay-200 animate-fade-up" style={{ marginBottom: '40px' }}>
+            <div className="form-group delay-200 animate-fade-up" style={{ marginBottom: '32px' }}>
               <label className="form-label">Password</label>
               <input
                 type="password"
@@ -83,9 +106,29 @@ function Login() {
             </div>
 
             <div className="delay-300 animate-fade-up">
-              <button type="submit" className="btn btn-primary btn-full" style={{ padding: '16px', fontSize: '18px', marginBottom: '24px' }}>
+              <button type="submit" className="btn btn-primary btn-full" style={{ padding: '16px', fontSize: '18px', marginBottom: '20px' }}>
                 <LogIn size={20} /> Sign In
               </button>
+
+              {/* Divider */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+                <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }} />
+                <span style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>or continue with</span>
+                <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }} />
+              </div>
+
+              {/* Google Sign-In Button */}
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={() => alert("Google sign-in failed")}
+                  theme="filled_black"
+                  shape="rectangular"
+                  size="large"
+                  text="signin_with"
+                  width="360"
+                />
+              </div>
 
               <div style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>
                 Don't have an account?{' '}
@@ -104,4 +147,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Login;
