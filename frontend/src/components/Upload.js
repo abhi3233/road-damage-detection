@@ -78,7 +78,7 @@ function Upload() {
 
     try {
       const token = localStorage.getItem("token");
-      const API_URL = process.env.REACT_APP_API_URL || "http://127.0.0.1:8000";
+      const API_URL = process.env.REACT_APP_API_URL || "https://road-damage-detection-2-0.onrender.com";
       const res = await axios.post(`${API_URL}/upload`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
