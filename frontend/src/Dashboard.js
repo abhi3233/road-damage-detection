@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LogOut, Plus, RefreshCw, Trophy, ImageIcon, MapPin, Award, Activity, Trash2 } from "lucide-react";
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 function Dashboard() {
   const [myReports, setMyReports] = useState([]);
@@ -93,6 +94,24 @@ function Dashboard() {
     return type;
   };
 
+  const calculateStats = (reports) => {
+    const stats = { crack: 0, pothole: 0, no_damage: 0 };
+    reports.forEach(r => {
+      if (r.damage_type === "crack") stats.crack += 1;
+      else if (r.damage_type === "pothole") stats.pothole += 1;
+      else if (r.damage_type === "no_damage") stats.no_damage += 1;
+    });
+    
+    return [
+      { name: "Crack", value: stats.crack },
+      { name: "Pothole", value: stats.pothole },
+      { name: "No Damage", value: stats.no_damage }
+    ].filter(item => item.value > 0);
+  };
+
+  const pieData = calculateStats(myReports);
+  const COLORS = ['#ef4444', '#f59e0b', '#10b981']; // Red, Amber, Green
+
   return (
     <>
       <div className="app-background"></div>
@@ -129,6 +148,38 @@ function Dashboard() {
                 {totalScore} <span style={{ fontSize: '18px', color: 'var(--text-secondary)', fontWeight: '500' }}>pts</span>
               </div>
             </div>
+
+            {view === "my" && pieData.length > 0 && (
+              <div className="glass-card glass-card-compact hover-lift" style={{ marginBottom: '24px' }}>
+                <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px', fontSize: '18px' }}>
+                  <Activity size={20} color="var(--accent-primary)" /> Upload Statistics
+                </h3>
+                <div style={{ width: '100%', height: '200px' }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={pieData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={50}
+                        outerRadius={80}
+                        paddingAngle={5}
+                        dataKey="value"
+                      >
+                        {pieData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip 
+                        contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: '1px solid var(--glass-border)', borderRadius: '8px' }}
+                        itemStyle={{ color: '#fff' }}
+                      />
+                      <Legend />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            )}
 
             <div className="glass-card glass-card-compact hover-lift">
               <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px', fontSize: '18px' }}>
