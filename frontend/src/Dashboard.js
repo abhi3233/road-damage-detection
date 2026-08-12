@@ -16,7 +16,7 @@ function Dashboard() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const API_URL = process.env.REACT_APP_API_URL || "https://road-damage-detection-2-0.onrender.com";
+      const API_URL = process.env.REACT_APP_API_URL || "https://road-damage-detection-qcns.onrender.com";
       const myRes = await fetch(`${API_URL}/myreports/${username}`);
       const myData = await myRes.json();
 
@@ -43,7 +43,7 @@ function Dashboard() {
 
   const getImageUrl = (path) => {
     if (!path) return "";
-    const API_URL = process.env.REACT_APP_API_URL || "https://road-damage-detection-2-0.onrender.com";
+    const API_URL = process.env.REACT_APP_API_URL || "https://road-damage-detection-qcns.onrender.com";
     if (path.startsWith("http")) return path;
     const cleanPath = path.startsWith("/") ? path.substring(1) : path;
     return `${API_URL}/${cleanPath}`;
@@ -58,7 +58,7 @@ function Dashboard() {
   const handleDeleteReport = async (reportId) => {
     if (!window.confirm("Are you sure you want to delete this record?")) return;
     try {
-      const API_URL = process.env.REACT_APP_API_URL || "https://road-damage-detection-2-0.onrender.com";
+      const API_URL = process.env.REACT_APP_API_URL || "https://road-damage-detection-qcns.onrender.com";
       const res = await fetch(`${API_URL}/reports/${reportId}`, {
         method: "DELETE"
       });

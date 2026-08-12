@@ -17,7 +17,7 @@ function Register() {
     formData.append("email", email);
     formData.append("password", password);
 
-    const API_URL = process.env.REACT_APP_API_URL || "https://road-damage-detection-2-0.onrender.com";
+    const API_URL = process.env.REACT_APP_API_URL || "https://road-damage-detection-qcns.onrender.com";
 
     try {
       const response = await fetch(`${API_URL}/register`, {
