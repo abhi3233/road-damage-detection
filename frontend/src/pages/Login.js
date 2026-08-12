@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { LogIn, ArrowRight, Activity } from "lucide-react";
 import { GoogleLogin } from "@react-oauth/google";
 
-const API_URL = process.env.REACT_APP_API_URL || "http://127.0.0.1:8000";
+const API_URL = process.env.REACT_APP_API_URL || "https://road-damage-detection-2-0.onrender.com";
 
 function Login() {
   const [email, setEmail] = useState("");

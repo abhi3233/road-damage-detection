@@ -1,308 +1,530 @@
-# 🚧 Road Damage Detection and Monitoring System
+🚧 Road Damage Reporting and Monitoring System
 
-## 📌 Project Overview
+A full-stack intelligent web application for detecting, reporting, and monitoring road damage using a custom-trained Convolutional Neural Network (CNN). The system combines an AI-based image classification model with a React frontend, FastAPI backend, location-aware reporting, duplicate detection, and a community leaderboard.
 
-The **Road Damage Detection and Monitoring System** is an AI-powered web application designed to automatically detect road damages such as **potholes and cracks** using computer vision.
+📌 Project Overview
 
-Users can upload road images through a simple web interface, and the system processes them using a trained deep learning model to identify and classify damages. The goal is to assist authorities and individuals in **efficient road monitoring and maintenance**.
+Road damage such as cracks and potholes can affect road safety and requires timely reporting and maintenance.
 
----
+This project provides a web-based platform where users can:
 
-## 🎯 Objectives
+Register and log in securely
+Upload images of roads
+Automatically classify road conditions using a custom-trained CNN
+Detect whether an image contains a crack, pothole, or no damage
+Store reports with geographic coordinates
+Prevent duplicate image submissions
+Award points for valid contributions
+View personal and public reports
+Visualize reported locations on a map
+Compete through a community leaderboard
+🚀 Features
+🧠 AI-Based Road Damage Classification
 
-* Detect road damages using deep learning (**YOLOv8**)
-* Provide an intuitive and responsive web interface
-* Enable image upload with optional **GPS location tagging**
-* Build a complete **end-to-end pipeline (Frontend + Backend + AI Model)**
-* Store and display detection reports in a dashboard
+The system uses a custom Convolutional Neural Network (CNN) trained using TensorFlow/Keras.
 
----
+Unlike YOLO-based object detection, this project uses image classification. The complete image is provided to the CNN, which predicts the most likely road-condition class.
 
-## 🛠️ Tech Stack
+Detected Classes
 
-| Component | Technology Used      |
-| --------- | -------------------- |
-| Frontend  | React.js             |
-| Backend   | FastAPI              |
-| AI Model  | YOLOv8 (Ultralytics) |
-| Database  | SQLite               |
-| Language  | Python, JavaScript   |
-| Tools     | VS Code, Git, GitHub |
+The trained model currently classifies images into:
 
----
+Crack
+Pothole
+No Damage
 
-## 📅 Development Progress
+The model returns the predicted class along with a confidence score.
 
-### ✅ Week 1: Project Setup
+🔐 User Authentication
 
-* Initialized project structure
-* Set up **React frontend** and **FastAPI backend**
-* Built basic UI for image upload
+The application provides:
 
-**Outcome:**
+User registration
+User login
+Password hashing
+JWT-based authentication
+Protected user-specific reports
+📤 Road Damage Reporting
 
-✔️ Working project skeleton with frontend-backend separation
+Users can upload a road image through the web application.
 
----
+The system:
 
-### ✅ Week 2: Frontend–Backend Integration
+Receives the uploaded image
+Processes it using the CNN model
+Predicts the road condition
+Calculates the prediction confidence
+Records the user's location
+Stores the report
+Awards contribution points
+🛡️ Duplicate Upload Prevention
 
-* Developed API endpoint: `/upload`
-* Connected frontend using Fetch API
-* Implemented:
+The backend uses image hashing to identify previously submitted images.
 
-  * Image preview before upload
-  * GPS location capture (Browser API)
-  * Backend image storage
+This helps prevent:
 
-**Outcome:**
+Duplicate reports
+Repeated submissions
+Spam submissions
+Unnecessary duplicate point generation
+📍 Geo-Tagged Reports
 
-✔️ Fully functional image upload system with backend communication
+Each report can contain:
 
----
+Username
+Uploaded image
+Damage type
+Confidence score
+Latitude
+Longitude
+Timestamp
+Points earned
 
-### ✅ Week 3: AI Model Integration
+This allows reports to be associated with their real-world locations.
 
-* Installed and configured **YOLOv8**
-* Performed inference on uploaded images
-* Detected:
+🏆 Leaderboard
 
-  * Potholes
-  * Cracks
+The system includes a contribution-based leaderboard.
 
-* Extracted:
+Users earn points for valid road-damage reports, encouraging community participation in road monitoring.
 
-  * Labels
-  * Confidence scores
+🖥️ Dashboard
 
-* Integrated model with backend APIs
+The React dashboard provides different views for users.
 
-**Outcome:**
+My Uploads
 
-✔️ End-to-end AI pipeline completed
+Displays reports submitted by the logged-in user.
 
----
+Public Uploads
 
-### ✅ Week 4: Dashboard & Reports
+Displays reports submitted by users across the platform.
+
+Map Visualization
+
+Reported locations can be visualized using geographic coordinates.
+
+🧠 Machine Learning Model
+Dataset
+
+The model was trained using the RDD2022 (Road Damage Dataset 2022) as the source dataset.
+
+The dataset contains road images representing different types of road conditions.
+
+Dataset resources and training material are maintained separately in the project's Google Drive.
+
+🏗️ Model Architecture
+
+Instead of using a pre-trained YOLO model, the project uses a custom Convolutional Neural Network (CNN) developed and trained using TensorFlow/Keras.
+
+The CNN performs image classification rather than object detection.
+
+Classification Pipeline
+Road Image
+     ↓
+Image Preprocessing
+     ↓
+CNN Model
+     ↓
+Feature Extraction
+     ↓
+Classification Layers
+     ↓
+Predicted Class
+     ↓
+Confidence Score
+
+The final classes used by the deployed model are:
+
+crack
+no_damage
+pothole
+⚙️ Model Training
+
+Training was performed using GPU-enabled computing resources.
+
+The RDD2022 images were prepared for classification and used to train the custom CNN.
+
+The general training workflow was:
+
+RDD2022 Dataset
+       ↓
+Dataset Preparation
+       ↓
+Image Preprocessing
+       ↓
+Training / Validation Split
+       ↓
+Custom CNN
+       ↓
+TensorFlow/Keras Training
+       ↓
+Model Evaluation
+       ↓
+Saved Trained Model
+
+The trained model is then loaded by the FastAPI backend for predictions.
+
+💻 Technology Stack
+Frontend
+React.js
+JavaScript
+HTML
+CSS
+React Router
+Backend
+Python
+FastAPI
+Uvicorn
+SQLAlchemy
+Python Multipart
+Machine Learning
+TensorFlow
+Keras
+NumPy
+Pillow
+Authentication
+JWT
+Passlib
+Bcrypt
+Python-JOSE
+Database
+SQLite
+SQLAlchemy ORM
+Deployment
+GitHub
+Render
+Google Colab / GPU-enabled environment for model training
+🏗️ System Architecture
+                    ┌──────────────────────┐
+                    │      React.js        │
+                    │      Frontend        │
+                    └──────────┬───────────┘
+                               │
+                               │ HTTP Requests
+                               ▼
+                    ┌──────────────────────┐
+                    │      FastAPI         │
+                    │       Backend        │
+                    └───────┬───────┬──────┘
+                            │       │
+              ┌─────────────┘       └─────────────┐
+              ▼                                   ▼
+     ┌──────────────────┐               ┌──────────────────┐
+     │ TensorFlow CNN   │               │ SQLite Database  │
+     │ Classification   │               │    + SQLAlchemy  │
+     └──────────────────┘               └──────────────────┘
+              │                                   │
+              ▼                                   ▼
+       Prediction +                     Reports / Users /
+       Confidence                       Leaderboard Data
+⚙️ Local Installation
+1️⃣ Clone the Repository
+git clone https://github.com/ce240004025-art/Road-Damage-Detection-2.0.git
+cd Road-Damage-Detection-2.0
+2️⃣ Backend Setup
+
+Navigate to the backend:
 
-* Stored detection results in backend database
-* Created **dashboard in React**
-* Displayed:
+cd backend
 
-  * Uploaded images
-  * Detection results
-  * Reports list
-  * GPS information
+Create and activate a virtual environment.
 
-**Outcome:**
+Windows
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
 
-✔️ Complete system with visualization of results
+Install the required dependencies:
 
----
+pip install -r requirements.txt
+3️⃣ Start the Backend
 
-# 🔐 User Authentication System (Latest Update)
+From the backend directory:
 
-A complete authentication system has been integrated into the application.
+uvicorn main:app --reload
 
-## 👤 Registration and Login
+The API will normally be available at:
 
-Implemented features:
+http://127.0.0.1:8000
 
-* User registration
-* Secure password hashing
-* User login authentication
-* JWT-based authentication
-* User-specific dashboard access
-* Personalized report management
+FastAPI documentation:
 
-### Authentication Workflow:
+http://127.0.0.1:8000/docs
+4️⃣ Frontend Setup
 
-1. User creates an account
-2. Password is securely stored after hashing
-3. User logs into the application
-4. Authentication token is generated
-5. User gets access to dashboard features
+Open another terminal and navigate to the frontend:
 
-**Outcome:**
+cd frontend
 
-✔️ Secure user management system implemented
+Install dependencies:
 
----
+npm install
+
+Start the React development server:
+
+npm start
+
+The frontend will normally run at:
+
+http://localhost:3000
+🌐 Deployment
+
+The project is deployed using Render.
+
+Backend
+
+The FastAPI backend is deployed as a Render Web Service.
+
+Backend URL:
+
+https://road-damage-detection-2-0.onrender.com
+
+Frontend
+
+The React frontend is deployed as a Render Static Site.
+
+The frontend communicates with the deployed FastAPI backend through the Render backend URL.
+
+Production Flow
+User
+ ↓
+React Frontend
+ ↓
+Render Static Site
+ ↓
+FastAPI Backend
+ ↓
+TensorFlow CNN
+ ↓
+Prediction
+ ↓
+SQLite Database
+ ↓
+Dashboard / Reports / Leaderboard
+📤 How to Use the Application
+Step 1 — Register
+
+Create an account using the registration page.
+
+Step 2 — Login
+
+Log into the application using your credentials.
+
+Step 3 — Upload an Image
+
+Upload an image containing a road surface.
+
+Step 4 — AI Classification
+
+The custom CNN processes the image and predicts:
+
+Crack
+Pothole
+No Damage
+
+along with its confidence score.
+
+Step 5 — Location
+
+The application can obtain the user's latitude and longitude for the report.
+
+Step 6 — Report Storage
+
+The backend stores the report in the database.
+
+Step 7 — Points
+
+Valid contributions are awarded points.
+
+Step 8 — Dashboard
+
+Users can view their own reports, public reports, locations, and leaderboard rankings.
+
+📊 Project Workflow
+                User
+                  │
+                  ▼
+          Register / Login
+                  │
+                  ▼
+          Upload Road Image
+                  │
+                  ▼
+        Duplicate Image Check
+                  │
+                  ▼
+       Image Preprocessing
+                  │
+                  ▼
+        Custom CNN (TensorFlow)
+                  │
+                  ▼
+       ┌──────────┼──────────┐
+       ▼          ▼          ▼
+     Crack     Pothole    No Damage
+       │          │          │
+       └──────────┼──────────┘
+                  ▼
+          Confidence Score
+                  │
+                  ▼
+          Location Metadata
+                  │
+                  ▼
+          Store Report
+                  │
+                  ▼
+            Award Points
+                  │
+                  ▼
+       Dashboard / Leaderboard
+📁 Project Structure
+Road-Damage-Detection-2.0/
+│
+├── backend/
+│   ├── main.py
+│   ├── requirements.txt
+│   ├── reports.db
+│   └── uploads/
+│
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   │   └── Upload.js
+│   │   ├── pages/
+│   │   │   ├── Login.js
+│   │   │   └── Register.js
+│   │   ├── Dashboard.js
+│   │   ├── App.js
+│   │   └── index.js
+│   ├── package.json
+│   └── package-lock.json
+│
+├── runtime.txt
+└── README.md
+🗄️ Database
 
-# 🏆 User Scoring System
+The backend uses SQLite with SQLAlchemy.
 
-A contribution-based scoring system has been added to encourage users to report road damages.
+The database stores information related to:
 
-The system automatically awards points after successful damage detection.
+Users
+Road-damage reports
+Prediction results
+Confidence scores
+Geographic coordinates
+Timestamps
+Contribution points
+☁️ Model Training Environment
 
-## Features:
+The machine-learning model was trained using GPU-enabled computing resources.
 
-* Points are assigned based on detected damage category
-* Points are stored with every report
-* User total score is calculated automatically
-* Scores contribute to leaderboard ranking
+The training environment allowed the CNN to be trained efficiently on the RDD2022 image dataset.
 
-## Benefits:
+The trained TensorFlow/Keras model is subsequently used by the FastAPI backend during inference.
 
-* Encourages users to actively report road damages
-* Creates a community-driven monitoring system
-* Rewards users for contributing useful road information
+⚠️ Challenges Faced
+1. Limited Initial Training Data
 
-**Outcome:**
+An initial training attempt with a smaller subset of images produced unsatisfactory classification performance.
 
-✔️ Gamified road reporting system implemented
+Solution
 
----
+A larger portion of the RDD2022 dataset was used for training and validation.
 
-# 🥇 Leaderboard System
+2. Model Deployment
 
-A leaderboard system has been developed to rank users based on their contribution.
+Deploying a TensorFlow-based model on a cloud platform introduced compatibility and dependency issues.
 
-## Features:
+Solution
 
-* Calculates total points earned by users
-* Displays top contributors
-* Updates automatically after new reports
-* Shows user rankings
+The backend environment was configured with a compatible Python version and TensorFlow dependencies.
 
-The leaderboard motivates users to contribute more road damage reports and improves community participation.
+The final backend was successfully deployed on Render.
 
-**Outcome:**
+3. Frontend–Backend Integration
 
-✔️ Dynamic leaderboard system integrated
+During development, the frontend initially used a local backend URL.
 
----
+The production frontend was updated to communicate with the deployed FastAPI backend.
 
-# 🛡️ Duplicate Upload Prevention
+Local:
+http://127.0.0.1:8000
 
-A duplicate image prevention mechanism has been implemented to avoid repeated submissions.
+Production:
+https://road-damage-detection-2-0.onrender.com
+4. Duplicate Reports
 
-## Features:
+Repeated uploads of the same image could result in duplicate reports.
 
-* Generates unique image hash values
-* Checks uploaded images against existing reports
-* Prevents duplicate image submissions
-* Avoids repeated points generation
+Solution
 
-## Benefits:
+Image hashing was implemented to identify duplicate images before creating a new report.
 
-* Maintains clean database records
-* Prevents spam uploads
-* Improves reliability of collected road damage data
+👨‍💻 Team Members
+Name	Role	Roll Number	GitHub
+Chunduri Abhiram	Team Leader	240041011	@abhi3233
+Enakollu Mahidhar Reddy	Developer	240001030	@enakollu-mahi
+Chunchu Santhosh Rushendra	Developer	240004013	@chunchusanthoshrushendra
+Katammagari Manas Joel	Developer	240004025	@ce240004025-art
+🙏 Acknowledgements
 
-**Outcome:**
+We sincerely thank:
 
-✔️ Duplicate report prevention system implemented
+🎓 Institution
 
----
+Science & Technology Council (SnT), IIT Indore
 
-# 📍 Enhanced Detection Reports
+for organizing the IITISoC 2026 program and providing the platform to develop this project.
 
-Each uploaded report stores complete detection information:
+🧑‍🏫 Mentor
 
-* Username
-* Uploaded image
-* Damage type
-* YOLOv8 confidence score
-* Latitude
-* Longitude
-* Timestamp
-* Points earned
+Sourav Rai — @Souravrai2005
 
-The dashboard provides two views:
+for his:
 
-### My Uploads
+Guidance
+Feedback
+Technical direction
+🤝 Special Contributions
 
-Displays reports uploaded by the logged-in user.
+We deeply appreciate:
 
-### Public Uploads
+Hanumanthu Yerukula Yeshwanth Kumar — @KIRITO-899
+Dodda Rishik
 
-Displays reports submitted by all users in the system.
+for providing GPU-enabled laptops that were valuable during model training.
 
----
+📂 Resources
+Dataset, Model & Training Results
 
-# 📊 Database Management
+Google Drive Folder
 
-The backend maintains structured storage for:
+🔮 Future Improvements
 
-* User accounts
-* Password information
-* Detection reports
-* Image paths
-* GPS coordinates
-* Damage categories
-* Confidence values
-* User scores
-* Timestamps
+Potential future improvements include:
 
-This allows future expansion into:
+📱 Mobile application
+⚡ Real-time road-condition detection
+🗺️ Improved GIS-based road monitoring
+🏛️ Government/municipal dashboard integration
+🚧 Road severity estimation
+🔔 Automated maintenance alerts
+📊 Advanced road-damage analytics
+🤖 Improved CNN architecture and model accuracy
+☁️ Scalable cloud database
+📈 Historical road-condition tracking
+📜 License
 
-* Analytics dashboard
-* Road damage statistics
-* Map-based visualization
+This project was developed as part of IITISoC 2026 and is intended primarily for academic and research purposes.
 
----
+⭐ Final Note
 
-# 📊 Dataset and Training
+This project demonstrates the integration of Machine Learning, Web Development, Database Systems, Geolocation, Authentication, and Cloud Deployment to address a real-world civil infrastructure problem.
 
-* Initially used **RDD2022 dataset (~25,000 images)**
+The key machine-learning component is a custom-trained TensorFlow/Keras CNN, trained using road-damage imagery from RDD2022, and integrated into a FastAPI backend that serves predictions to a React-based web application.
 
-  * Faced long training times (~7 hours)
+The system provides an end-to-end pipeline:
 
-* Switched to a smaller dataset (~400 images) for faster iteration
-
-* Successfully trained and integrated YOLOv8 model
-
----
-
-# ⚠️ Challenges Faced
-
-* Limited dataset size → reduced accuracy
-* Difficulty distinguishing **potholes vs cracks**
-* Inconsistent model predictions
-* Training time constraints
-* Maintaining image storage and duplicate detection
-
----
-
-# 💡 Improvements & Future Work
-
-* Increase dataset size and quality
-* Apply **data augmentation techniques**:
-
-  * Flipping
-  * Rotation
-  * Brightness adjustment
-  * Scaling
-
-* Manually verify annotations (20–30 samples)
-* Improve bounding box accuracy
-* Add:
-
-  * Filtering by damage type
-  * Analytics dashboard
-  * Real-time detection
-  * Map-based visualization
-  * Cloud deployment
-
----
-
-# 🚀 Current Features
-
-* 📤 Image upload from frontend
-* 🖼️ Image preview before submission
-* 📍 Optional GPS location capture
-* 💾 Backend image storage
-* 🤖 AI-based damage detection
-* 📊 Dashboard to view reports
-* 🔐 User registration and login
-* 🔑 JWT authentication
-* 🏆 User scoring system
-* 🥇 Leaderboard ranking
-* 🛡️ Duplicate image prevention
-* 🌍 Public community reports
-* 🔄 End-to-end working pipeline
-
----
-
-# 📂 Project Structure
+Road Image → CNN Classification → Geo-Tagged Report → Database → Dashboard → Community Monitoring

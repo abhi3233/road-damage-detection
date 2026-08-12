@@ -1,10 +1,8 @@
---index-url https://download.pytorch.org/whl/cpu
---extra-index-url https://pypi.org/simple
-torch
-torchvision
 fastapi
 uvicorn[standard]
-ultralytics
+tensorflow
+pillow
+numpy
 sqlalchemy
 passlib[bcrypt]
 bcrypt==4.3.0

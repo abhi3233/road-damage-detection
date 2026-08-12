@@ -170,3 +170,12 @@ runs/
 *.zip
 *.tar.gz
 *.rar
+
+# Local Python virtual environments
+.venv/
+.venv-1/
+backend/.venv/
+backend/venv/
+
+# TensorFlow model is required for deployment
+!road_damage_cnn.keras
