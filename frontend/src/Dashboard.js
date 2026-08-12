@@ -103,14 +103,14 @@ function Dashboard() {
     });
     
     return [
-      { name: "Crack", value: stats.crack },
       { name: "Pothole", value: stats.pothole },
+      { name: "Crack", value: stats.crack },
       { name: "No Damage", value: stats.no_damage }
     ].filter(item => item.value > 0);
   };
 
-  const pieData = calculateStats(myReports);
-  const COLORS = ['#ef4444', '#f59e0b', '#10b981']; // Red, Amber, Green
+  const pieData = calculateStats(reports);
+  const COLORS = ['#ef4444', '#eab308', '#22c55e']; // Red, Yellow, Green
 
   return (
     <>
@@ -149,39 +149,7 @@ function Dashboard() {
               </div>
             </div>
 
-            {view === "my" && pieData.length > 0 && (
-              <div className="glass-card glass-card-compact hover-lift" style={{ marginBottom: '24px' }}>
-                <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px', fontSize: '18px' }}>
-                  <Activity size={20} color="var(--accent-primary)" /> Upload Statistics
-                </h3>
-                <div style={{ width: '100%', height: '200px' }}>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={pieData}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={50}
-                        outerRadius={80}
-                        paddingAngle={5}
-                        dataKey="value"
-                      >
-                        {pieData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip 
-                        contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: '1px solid var(--glass-border)', borderRadius: '8px' }}
-                        itemStyle={{ color: '#fff' }}
-                      />
-                      <Legend />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            )}
-
-            <div className="glass-card glass-card-compact hover-lift">
+            <div className="glass-card glass-card-compact hover-lift" style={{ marginBottom: '24px' }}>
               <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px', fontSize: '18px' }}>
                 <Trophy size={20} color="var(--warning)" /> Top Contributors
               </h3>
@@ -198,6 +166,36 @@ function Dashboard() {
                 ))}
               </ul>
             </div>
+
+            {pieData.length > 0 && (
+              <div className="glass-card glass-card-compact hover-lift" style={{ marginBottom: '24px' }}>
+                <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px', fontSize: '18px' }}>
+                  <Activity size={20} color="var(--accent-primary)" /> {view === "my" ? "Upload Statistics" : "Global Statistics"}
+                </h3>
+                <div style={{ width: '100%', height: '220px' }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={pieData}
+                        cx="50%"
+                        cy="45%"
+                        outerRadius={75}
+                        dataKey="value"
+                      >
+                        {pieData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip 
+                        contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: '1px solid var(--glass-border)', borderRadius: '8px' }}
+                        itemStyle={{ color: '#fff' }}
+                      />
+                      <Legend wrapperStyle={{ paddingTop: '16px' }} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Right Content */}
